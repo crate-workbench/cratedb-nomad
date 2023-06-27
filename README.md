@@ -83,6 +83,7 @@ docker run --rm -it --network=waypoint postgres \
 
 ## Resources
 
+- https://developer.hashicorp.com/waypoint/tutorials/get-started-docker/get-started-docker
 - https://faun.pub/just-in-time-nomad-managing-nomad-application-deployments-using-waypoint-on-hashiqube-467952b23689
 - https://discuss.hashicorp.com/
 
