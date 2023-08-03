@@ -9,9 +9,9 @@ ui_config {
 }
 
 client_addr = "0.0.0.0" # port 8600/ui, if this is not
-advertise_addr = "10.33.0.2" # needs to be set to a local address, in my case the private ip of the server
+advertise_addr = "10.x.x.2" # needs to be set to a local address, in my case the private ip of the server
 
-retry_join = ["10.33.0.2", "10.33.0.3", "10.33.0.4"]
+retry_join = ["10.x.x.2", "10.x.x.3", "10.x.x.4"]
 
 encrypt = "*****"
 

@@ -13,4 +13,4 @@ network:
                 macaddress: 96:00:02:63:00:bf
             set-name: eth0
             nameservers:
-              addresses: [10.33.0.2, 185.12.64.1]
+              addresses: [10.x.x.2, 185.12.64.1]
