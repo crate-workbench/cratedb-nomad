@@ -28,13 +28,13 @@ root@ubuntu-8gb-hel1-1:~# ip a
        valid_lft forever preferred_lft forever
 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
     link/ether 96:00:02:63:00:bf brd ff:ff:ff:ff:ff:ff
-    inet 95.217.186.98/32 metric 100 scope global dynamic eth0
+    inet pu.bl.ic.98/32 metric 100 scope global dynamic eth0
        valid_lft 57446sec preferred_lft 57446sec
     inet6 fe80::9400:2ff:fe63:bf/64 scope link
        valid_lft forever preferred_lft forever
 3: enp7s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc fq_codel state UP group default qlen 1000
     link/ether 86:00:00:52:77:2a brd ff:ff:ff:ff:ff:ff
-    inet 10.33.0.2/32 brd 10.33.0.2 scope global dynamic enp7s0
+    inet 10.x.x.2/32 brd 10.x.x.2 scope global dynamic enp7s0
        valid_lft 83014sec preferred_lft 83014sec
     inet6 fe80::8400:ff:fe52:772a/64 scope link
        valid_lft forever preferred_lft forever
@@ -43,8 +43,8 @@ root@ubuntu-8gb-hel1-1:~# netstat -rn
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 0.0.0.0         172.31.1.1      0.0.0.0         UG        0 0          0 eth0
-10.33.0.0       10.33.0.1       255.255.0.0     UG        0 0          0 enp7s0
-10.33.0.1       0.0.0.0         255.255.255.255 UH        0 0          0 enp7s0
+10.x.x.0       10.x.x.1       255.255.0.0     UG        0 0          0 enp7s0
+10.x.x.1       0.0.0.0         255.255.255.255 UH        0 0          0 enp7s0
 ```
 ## Rules for Hetzner Firewall (Incoming)
 
@@ -149,7 +149,7 @@ Make sure to disable `cache`  AFAIK it is enough to delete `cache` from the dire
 ```
 .:53 {
     bind enp7s0
-    forward consul 10.33.0.2:8600
+    forward consul 10.x.x.2:8600
     forward . /etc/resolv.conf
     log
     errors
@@ -190,7 +190,7 @@ network:
                 macaddress: 96:00:02:63:00:bf
             set-name: eth0
             nameservers:
-              addresses: [10.33.0.2, 185.12.64.1]
+              addresses: [10.x.x.2, 185.12.64.1]
 
 
 netplan apply
@@ -227,7 +227,7 @@ dig @127.0.0.1 -p 8600 http-rest-name-in-consul.service.dc1.consul
 ```
 
 ```
-; <<>> DiG 9.16.23-RH <<>> @10.33.0.2 -p 8600 http-rest-name-in-consul.service.dc1.consul SRV
+; <<>> DiG 9.16.23-RH <<>> @10.x.x.2 -p 8600 http-rest-name-in-consul.service.dc1.consul SRV
 ;; QUESTION SECTION:
 ;http-rest-name-in-consul.service.dc1.consul. IN	SRV
 
@@ -237,11 +237,11 @@ http-rest-name-in-consul.service.dc1.consul. 0 IN SRV 1 1 20533 5fd9ba62.addr.dc
 http-rest-name-in-consul.service.dc1.consul. 0 IN SRV 1 1 20764 5fd9ba62.addr.dc1.consul.
 
 ;; ADDITIONAL SECTION:
-5fd9ba62.addr.dc1.consul. 0	IN	A	95.217.186.98
+5fd9ba62.addr.dc1.consul. 0	IN	A	pu.bl.ic.98
 ubuntu-8gb-hel1-1.node.dc1.consul. 0 IN	TXT	"consul-network-segment="
-5fd9ba62.addr.dc1.consul. 0	IN	A	95.217.186.98
+5fd9ba62.addr.dc1.consul. 0	IN	A	pu.bl.ic.98
 ubuntu-8gb-hel1-1.node.dc1.consul. 0 IN	TXT	"consul-network-segment="
-5fd9ba62.addr.dc1.consul. 0	IN	A	95.217.186.98
+5fd9ba62.addr.dc1.consul. 0	IN	A	pu.bl.ic.98
 
 ```
 
@@ -278,35 +278,35 @@ I left this here, to better _transport_ the issue with: IP:Port inside the docke
 ```shell
  env | grep -i NOMAD
 
-NOMAD_HOST_ADDR_http-rest=95.217.186.98:20557
-NOMAD_ADDR_http_rest=95.217.186.98:20557
-NOMAD_HOST_IP_http-rest=95.217.186.98
-NOMAD_IP_http_rest=95.217.186.98
+NOMAD_HOST_ADDR_http-rest=pu.bl.ic.98:20557
+NOMAD_ADDR_http_rest=pu.bl.ic.98:20557
+NOMAD_HOST_IP_http-rest=pu.bl.ic.98
+NOMAD_IP_http_rest=pu.bl.ic.98
 NOMAD_ALLOC_PORT_http-rest=4200
 NOMAD_PORT_http_rest=4200
 
 ---
 
-NOMAD_ADDR_pg=95.217.186.98:28279
+NOMAD_ADDR_pg=pu.bl.ic.98:28279
 NOMAD_ALLOC_PORT_disco=4300
 NOMAD_ALLOC_PORT_pg=5432
 NOMAD_ALLOC_INDEX=1
-NOMAD_HOST_ADDR_pg=95.217.186.98:28279
+NOMAD_HOST_ADDR_pg=pu.bl.ic.98:28279
 NOMAD_PORT_disco=4300
-NOMAD_HOST_ADDR_disco=95.217.186.98:27632
+NOMAD_HOST_ADDR_disco=pu.bl.ic.98:27632
 NOMAD_SHORT_ALLOC_ID=e9a4d6cb
 NOMAD_ALLOC_NAME=crate.crate[1]
 NOMAD_HOST_PORT_disco=27632
-NOMAD_IP_pg=95.217.186.98
-NOMAD_HOST_IP_pg=95.217.186.98
+NOMAD_IP_pg=pu.bl.ic.98
+NOMAD_HOST_IP_pg=pu.bl.ic.98
 NOMAD_HOST_PORT_pg=28279
-NOMAD_ADDR_disco=95.217.186.98:27632
-NOMAD_HOST_IP_disco=95.217.186.98
+NOMAD_ADDR_disco=pu.bl.ic.98:27632
+NOMAD_HOST_IP_disco=pu.bl.ic.98
 NOMAD_MEMORY_LIMIT=2048
 NOMAD_PORT_pg=5432
 NOMAD_ALLOC_ID=e9a4d6cb-b6a9-55e4-13e1-1281c922cc2a
 NOMAD_HOST_PORT_http_rest=20557
-NOMAD_IP_disco=95.217.186.98
+NOMAD_IP_disco=pu.bl.ic.98
 
 ```
 

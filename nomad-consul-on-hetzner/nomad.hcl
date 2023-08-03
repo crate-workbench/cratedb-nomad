@@ -1,7 +1,7 @@
 
 datacenter = "dc1"
 data_dir = "/opt/nomad"
-#bind_addr = "10.33.0.2"
+#bind_addr = "10.x.x.2"
 bind_addr = "0.0.0.0"
 
 server {
@@ -18,16 +18,16 @@ client {
   }
 }
 
-retry_join = ["10.33.0.2:4647", "10.33.0.3:4647", "10.33.0.4:4647"]
+retry_join = ["10.x.x.2:4647", "10.x.x.3:4647", "10.x.x.4:4647"]
 
 advertise {
-  http = "10.33.0.2:4646"  # Replace with the IP address of Node 1
-  rpc  = "10.33.0.2:4647"  # Replace with the IP address of Node 1
-  serf = "10.33.0.2:4648"  # Replace with the IP address of Node 1
+  http = "10.x.x.2:4646"  # Replace with the IP address of Node 1
+  rpc  = "10.x.x.2:4647"  # Replace with the IP address of Node 1
+  serf = "10.x.x.2:4648"  # Replace with the IP address of Node 1
 }
 
 consul {
-  address = "10.33.0.2:8500"  # Use a different Consul server address for each client!
+  address = "10.x.x.2:8500"  # Use a different Consul server address for each client!
 }
 
 telemetry {

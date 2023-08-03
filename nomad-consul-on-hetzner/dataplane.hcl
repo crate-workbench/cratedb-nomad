@@ -36,7 +36,7 @@ haproxy {
 service_discovery {
   consuls = [
     {
-      Address                    = "10.33.0.2"
+      Address                    = "10.x.x.2"
       Description                = ""
       Enabled                    = true
       ID                         = "7920fee8-6fed-4585-a85c-cc19bb5cc1d8"
