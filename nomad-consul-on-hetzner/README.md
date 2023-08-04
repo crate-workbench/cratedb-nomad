@@ -119,6 +119,14 @@ curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/relea
 
 ```
 
+### Hetzner CSI Plugin
+https://github.com/hetznercloud/csi-driver/tree/080f4e4b7e2b0d03883066b57bc6a1eff1bcb8a3/docs/nomad
+https://developer.hashicorp.com/nomad/docs/other-specifications/volume
+
+- Setup the csi-controller
+- Setup the csi-node
+- create the volume: `nomad volume create <vol.hcl>`
+- add it to your favorite group definition
 
 ### add consul DNS to `systemd-resolved`
 
