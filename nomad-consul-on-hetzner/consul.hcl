@@ -1,4 +1,3 @@
-
 datacenter = "dc1"
 data_dir = "/opt/consul"
 server = true
@@ -31,4 +30,14 @@ tls {
 
 auto_encrypt {
   allow_tls = true
+}
+
+ports {
+  grpc = 8502
+  grpc_tls= 8503
+#  dns = 53
+}
+
+connect {
+  enabled = true
 }
