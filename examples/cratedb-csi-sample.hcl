@@ -16,12 +16,13 @@ job "crate-multi-node" {
       source = "crate-config"
     }
 
-    volume "cratex" {
+    volume "crate-data" {
       type            = "csi"
       read_only       = false
-      source          = "crateX"
+      source          = "vol"
       access_mode     = "single-node-writer"
       attachment_mode = "file-system"
+      per_alloc       = true
     }
 
     network {
@@ -85,7 +86,7 @@ EOF
 	    }
 
       volume_mount {
-	      volume = "cratex"
+	      volume = "crate-data"
 	      destination = "/data"
 	      read_only = false
 	    }

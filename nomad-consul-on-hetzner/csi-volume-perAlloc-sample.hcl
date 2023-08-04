@@ -2,8 +2,8 @@
 # Created external volume 35289662 with ID crateX
 
 type      = "csi"
-id        = "crate-vol-2"
-name      = "crate-vol-2"
+id        = "vol[0]"
+name      = "vol-0"
 plugin_id = "csi.hetzner.cloud"
 capacity_max = "11GiB"
 capacity_min = "11GiB"
