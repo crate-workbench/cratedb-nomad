@@ -57,8 +57,8 @@ EOF
               "-Cnode.name=${NOMAD_GROUP_NAME}-${NOMAD_ALLOC_INDEX}",
               "-Cdiscovery.type=zen",
               "-Cdiscovery.seed_providers=srv",
-              "-Cdiscovery.srv.query=disco-name-in-consul.service.dc1.consul.",
-              "-Ccluster.initial_master_nodes=crate-0",
+              "-Cdiscovery.srv.query=disco-${NOMAD_GROUP_NAME}.service.${NOMAD_DC}.consul.",
+              "-Ccluster.initial_master_nodes=${NOMAD_GROUP_NAME}-0",
               "-Cnode.master=true",
               "-Cnode.data=true",
               "-Ctransport.publish_port=${NOMAD_HOST_PORT_disco}",
@@ -84,13 +84,19 @@ EOF
     }
         service {
         provider = "consul"
-        name = "disco-name-in-consul"
+        name = "disco-${NOMAD_GROUP_NAME}"
         port = "disco"
       }
         service {
         provider = "consul"
-        name = "http-rest-name-in-consul"
+        name = "http-rest-${NOMAD_GROUP_NAME}"
         port = "http-rest"
       }
+        service {
+        provider = "consul"
+        name = "pg-${NOMAD_GROUP_NAME}"
+        port = "pg"
+      }
+
   }
 }
