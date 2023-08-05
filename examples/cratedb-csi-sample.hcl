@@ -3,7 +3,7 @@ job "crate-multi-node" {
 
   group "crate" {
 
-    count = 1
+    count = 3
 
     constraint {
      operator  = "distinct_hosts"
@@ -106,6 +106,19 @@ EOF
         provider = "consul"
         name = "http-rest-${NOMAD_GROUP_NAME}"
         port = "http-rest"
+
+        check {
+          type     = "http"
+          path     = "/"
+          interval = "5s"
+          timeout  = "1s"
+        }
+
+        tags = [
+          "urlprefix-/${NOMAD_JOB_NAME} strip=/${NOMAD_JOB_NAME}",
+          "urlprefix-/static",
+        ]
+
       }
         service {
         provider = "consul"
