@@ -92,8 +92,8 @@ EOF
 	    }
 
       resources {
-        cpu    = 2000 # 500 MHz
-        memory = 2048 # 256MB
+        cpu    = 2000
+        memory = 2048
       }
 
     }
@@ -124,6 +124,18 @@ EOF
         provider = "consul"
         name = "pg-${NOMAD_GROUP_NAME}"
         port = "pg"
+
+        check {
+          type     = "tcp"
+          port     = "pg"
+          interval = "5s"
+          timeout  = "1s"
+        }
+
+        tags = [
+         "urlprefix-:7432 proto=tcp",
+        ]
+
       }
 
   }
