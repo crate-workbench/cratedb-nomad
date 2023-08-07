@@ -27,6 +27,9 @@ job "crate-multi-node" {
       port "disco" {
       to     = 4300
       }
+      port "jmx" {
+        to     = 7071
+      }
 
     }
 
@@ -52,12 +55,12 @@ EOF
       config {
         image = "crate/crate:5.4.0"
         args = [
-              "-Ccluster.name=${NOMAD_GROUP_NAME}",
+              "-Ccluster.name=${NOMAD_JOB_NAME}",
               "-Cstats.enabled=true",
               "-Cnode.name=${NOMAD_GROUP_NAME}-${NOMAD_ALLOC_INDEX}",
               "-Cdiscovery.type=zen",
               "-Cdiscovery.seed_providers=srv",
-              "-Cdiscovery.srv.query=disco-${NOMAD_GROUP_NAME}.service.${NOMAD_DC}.consul.",
+              "-Cdiscovery.srv.query=disco-${NOMAD_JOB_NAME}.service.${NOMAD_DC}.consul.",
               "-Ccluster.initial_master_nodes=${NOMAD_GROUP_NAME}-0",
               "-Cnode.master=true",
               "-Cnode.data=true",
@@ -84,18 +87,52 @@ EOF
     }
         service {
         provider = "consul"
-        name = "disco-${NOMAD_GROUP_NAME}"
+        name = "disco-${NOMAD_JOB_NAME}"
         port = "disco"
       }
         service {
         provider = "consul"
-        name = "http-rest-${NOMAD_GROUP_NAME}"
+        name = "http-rest-${NOMAD_JOB_NAME}"
         port = "http-rest"
+
+        check {
+          type     = "http"
+          path     = "/"
+          interval = "5s"
+          timeout  = "1s"
+        }
+
+        tags = [
+          "urlprefix-/${NOMAD_JOB_NAME} strip=/${NOMAD_JOB_NAME}",
+          "urlprefix-/static",
+        ]
+
       }
         service {
         provider = "consul"
-        name = "pg-${NOMAD_GROUP_NAME}"
+        name = "pg-${NOMAD_JOB_NAME}"
         port = "pg"
+
+        check {
+          type     = "tcp"
+          port     = "pg"
+          interval = "5s"
+          timeout  = "1s"
+        }
+
+        tags = [
+          "urlprefix-:7433 proto=tcp",
+        ]
+     }
+
+      service {
+        provider = "consul"
+        name = "jmx-${NOMAD_JOB_NAME}"
+        port = "jmx"
+
+        tags = [
+         "jmx",
+        ]
       }
 
   }
