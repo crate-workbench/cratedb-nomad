@@ -68,6 +68,16 @@ scrape_configs:
     - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
       tags: ['jmx']
 
+    relabel_configs:
+    - source_labels: ['__meta_consul_service']
+      regex: (.*)
+      target_label: 'service'
+      replacement: '$1'
+    - source_labels: ['__meta_consul_tags']
+      regex: (.*)
+      target_label: 'tags'
+      replacement: '$1'
+
     scrape_interval: 15s
     #metrics_path: /metrics
     params:
