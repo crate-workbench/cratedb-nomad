@@ -50,3 +50,9 @@ plugin "raw_exec" {
     enabled = true
   }
 }
+
+plugin "docker" {
+  config {
+    allow_privileged = true
+  }
+}

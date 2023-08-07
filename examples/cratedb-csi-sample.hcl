@@ -1,4 +1,4 @@
-job "crate-multi-node" {
+job "crate-csi-node" {
   datacenters = ["dc1"]
 
   group "crate" {
@@ -14,6 +14,15 @@ job "crate-multi-node" {
       type = "host"
       read_only = false
       source = "crate-config"
+    }
+
+    volume "crate-data" {
+      type            = "csi"
+      read_only       = false
+      source          = "vol"
+      access_mode     = "single-node-writer"
+      attachment_mode = "file-system"
+      per_alloc       = true
     }
 
     network {
@@ -73,11 +82,17 @@ EOF
             ]
       }
 
-	  volume_mount {
-	    volume = "crate-config"
-	    destination = "/crate/config"
-	    read_only = false
-	  }
+	    volume_mount {
+	      volume = "crate-config"
+	      destination = "/crate/config"
+	      read_only = false
+	    }
+
+      volume_mount {
+	      volume = "crate-data"
+	      destination = "/data"
+	      read_only = false
+	    }
 
       resources {
         cpu    = 2000
@@ -121,9 +136,9 @@ EOF
         }
 
         tags = [
-          "urlprefix-:7433 proto=tcp",
+         "urlprefix-:7432 proto=tcp",
         ]
-     }
+      }
 
       service {
         provider = "consul"
