@@ -89,7 +89,7 @@ EOH
       driver = "docker"
 
       env {
-        PROMETHEUS_OPTS="--web.external-url=http://nomad1:9999/prometheus  --storage.tsdb.retention.time=28d --log.level=warn"
+        PROMETHEUS_OPTS="--web.external-url=http://nomad1:9999/prometheus/  --storage.tsdb.retention.time=28d --log.level=warn"
       }
 
       config {
@@ -104,7 +104,7 @@ EOH
 
       service {
         name = "prometheus"
-        tags = ["urlprefix-/prometheus"]
+        tags = ["urlprefix-/prometheus strip=/prometheus}",]
         port = "prometheus_ui"
 
         check {
