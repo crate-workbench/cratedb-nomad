@@ -10,6 +10,12 @@ job "fabiolb" {
 
   group "lb" {
 
+    network {
+      port "fabio-prometheus" {
+        static = 7999
+      }
+    }
+
 
     task "fabio" {
       driver = "exec"
@@ -22,8 +28,12 @@ job "fabiolb" {
 
       config {
         command = "fabio"
-         args = ["-proxy.addr", ":7432;proto=tcp"]
+         args = ["-proxy.addr", ":7432;proto=tcp,:7999;proto=prometheus"]
       }
+    }
+    service {
+      name = "fabio-prometheus"
+      port = "fabio-prometheus"
     }
   }
 }

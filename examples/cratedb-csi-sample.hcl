@@ -36,6 +36,9 @@ job "crate-multi-node" {
       port "disco" {
       to     = 4300
       }
+      port "jmx" {
+        to     = 7071
+      }
 
     }
 
@@ -135,7 +138,16 @@ EOF
         tags = [
          "urlprefix-:7432 proto=tcp",
         ]
+      }
 
+      service {
+        provider = "consul"
+        name = "jmx-${NOMAD_GROUP_NAME}"
+        port = "jmx"
+
+        tags = [
+         "jmx",
+        ]
       }
 
   }
