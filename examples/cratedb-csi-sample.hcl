@@ -60,6 +60,7 @@ EOF
 
       kill_signal = "SIGTERM"
       kill_timeout = "180s"
+      max_kill_timeout = "300s"
 
       config {
         image = "crate/crate:5.4.0"
