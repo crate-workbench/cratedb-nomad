@@ -1,0 +1,60 @@
+---
+
+- name: Ensure consul directories
+  tags: consul
+  file:
+    path: "{{ item.dir }}"
+    #owner: consul
+    #group: consul
+    state: directory
+    mode: '0755'
+  loop:
+    - { dir: '/opt/consul' }
+    - { dir: '/etc/consul.d' }
+
+- name: Download HashiCorp GPG key
+  shell: |
+    curl --fail --silent --show-error --location https://apt.releases.hashicorp.com/gpg |
+    gpg --dearmor |
+    sudo dd of=/usr/share/keyrings/hashicorp-archive-keyring.gpg
+  args:
+    executable: /bin/bash
+
+- name: Ensure hashicorp apt repository for JAMMY !!!!
+  tags: nomad
+  ansible.builtin.copy:
+    src: hashicorp.list
+    dest: /etc/apt/sources.list.d/
+    mode: 0644
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: install consul
+  apt:
+    name: consul
+    state: latest
+    update_cache: yes
+
+- name: Configure systemd to use service
+  tags: consul
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    state: started
+    name: consul.service
+  notify: restart consul
+
+- name: Template consul config file
+  tags: consul
+  template:
+    dest: /etc/consul.d/consul.hcl
+    src: consul.hcl.j2
+    #owner: consul
+    #group: consul
+    mode: '0640'
+    lstrip_blocks: yes
+    trim_blocks: no
+  notify: restart consul
+  ignore_errors: yes ### ATM I ignore this

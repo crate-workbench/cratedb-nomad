@@ -1,0 +1,48 @@
+---
+
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Add hostname to /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127\.0\.0\.1[ \t]+localhost'
+    line: '127.0.0.1 localhost {{ inventory_hostname }}'
+    state: present
+
+- name: Set limits.d/nofile.conf
+  ansible.builtin.copy:
+    src: nofile.conf
+    dest: /etc/security/limits.d/nofile.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable compress on logrotate
+  lineinfile:
+    dest: /etc/logrotate.conf
+    regexp: '^#compress'
+    line: 'compress'
+    state: present
+
+- name: Install common tools
+  tags: swinst
+  package:
+    name:
+      - fzf
+      - httpie
+      - htop
+      - tree
+      - unzip
+      - docker.io
+
+- name: Install dust
+  tags: swinst
+  unarchive:
+    src: https://github.com/bootandy/dust/releases/download/v0.7.5/dust-v0.7.5-x86_64-unknown-linux-gnu.tar.gz
+    dest: /usr/local/bin
+    remote_src: true
+    creates: /usr/local/bin/dust
+    extra_opts:
+      - --strip-components=1

@@ -1,0 +1,57 @@
+
+datacenter = "dc1"
+data_dir = "/opt/nomad"
+bind_addr = "0.0.0.0"
+
+server {
+  enabled = true
+  bootstrap_expect = 3
+}
+
+client {
+  enabled = true
+
+  host_volume "crate-config" {
+    path      = "/opt/crate/config"
+    read_only = false
+  }
+}
+
+retry_join = {{ nomad_servers }}
+
+advertise {
+  http = "{{internal_ip}}:4646"  # Replace with the IP address of Node 1
+  rpc  = "{{internal_ip}}:4647"  # Replace with the IP address of Node 1
+  serf = "{{internal_ip}}:4648"  # Replace with the IP address of Node 1
+}
+
+consul {
+  address = "{{internal_ip}}:8500"  # Use a different Consul server address for each client!
+}
+
+telemetry {
+  publish_allocation_metrics = true
+  publish_node_metrics = true
+  prometheus_metrics = true
+}
+
+# Enable the UI for the Nomad server
+ui {
+  enabled = true
+}
+
+# Enable logging to a file
+log_level = "INFO"
+log_file  = "/var/log/nomad/nomad.log"
+
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
+}
+
+plugin "docker" {
+  config {
+    allow_privileged = true
+  }
+}

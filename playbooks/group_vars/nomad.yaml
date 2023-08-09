@@ -1,0 +1,8 @@
+nomad_servers: |
+    ["10.33.0.5:4647"]
+
+consul_servers: |
+    ["10.33.0.5"]
+
+
+consul_keygen: "l6R1ODtKvpfrUnczZs/T5Coyr6mFl5YTCStQHxU/T04="

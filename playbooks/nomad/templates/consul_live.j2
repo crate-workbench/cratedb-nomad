@@ -1,0 +1,43 @@
+datacenter = "dc1"
+data_dir = "/opt/consul"
+server = true
+bootstrap_expect = 3
+
+ui_config {
+  enabled = true
+}
+
+client_addr = "0.0.0.0"
+advertise_addr = "10.33.0.2"
+
+retry_join = ["10.33.0.2", "10.33.0.3", "10.33.0.4"]
+
+encrypt = "uFtvjx+CWrZAk+2lEsZGUbe6Wdww584K3O42S98fmcA="
+
+tls {
+   defaults {
+      ca_file = "/etc/consul.d/consul-agent-ca.pem"
+      cert_file = "/etc/consul.d/dc1-server-consul-0.pem"
+      key_file = "/etc/consul.d/dc1-server-consul-0-key.pem"
+
+      verify_incoming = true
+      verify_outgoing = true
+   }
+   internal_rpc {
+      verify_server_hostname = true
+   }
+}
+
+auto_encrypt {
+  allow_tls = true
+}
+
+ports {
+  grpc = 8502
+  grpc_tls= 8503
+#  dns = 53
+}
+
+connect {
+  enabled = true
+}
