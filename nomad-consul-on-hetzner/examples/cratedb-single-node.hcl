@@ -31,8 +31,8 @@ job "crate-single-node" {
 
 
       resources {
-        cpu    = 2000 # 500 MHz
-        memory = 2048 # 256MB
+        cpu    = 2000
+        memory = 2048
       }
 
       service {

@@ -28,7 +28,10 @@ job "fabiolb" {
 
       config {
         command = "fabio"
-         args = ["-proxy.addr", ":9999;proto=http,:7432;proto=tcp,:7433;proto=tcp,:7999;proto=prometheus"]
+         args = [
+          "-proxy.addr", ":9999;proto=http,:7432;proto=tcp,:7433;proto=tcp,:7999;proto=prometheus",
+          "-metrics.target", "prometheus",
+        ]
       }
     }
     service {
