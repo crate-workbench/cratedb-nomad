@@ -1,4 +1,4 @@
 ---
-#- import_tasks: host_config.yaml
-#- import_tasks: nomad.yaml
+- import_tasks: host_config.yaml
+- import_tasks: nomad.yaml
 - import_tasks: consul.yaml

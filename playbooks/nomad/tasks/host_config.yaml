@@ -28,7 +28,7 @@
 
 - name: Install common tools
   tags: swinst
-  package:
+  apt:
     name:
       - fzf
       - httpie
@@ -36,6 +36,7 @@
       - tree
       - unzip
       - docker.io
+    update_cache: yes
 
 - name: Install dust
   tags: swinst

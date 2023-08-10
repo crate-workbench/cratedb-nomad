@@ -1,8 +1,10 @@
+consul_nomad_password: "$y$j9T$ghWraFvdNVwIpSYlLakFH/$NCyuBqGXXraHo9MT3bQL5OgCf40GnrVGWlipwvAniI/" # mkpasswd -m sha-512
+
 nomad_servers: |
-    ["10.33.0.5:4647"]
+    ["10.33.0.5:4647", "10.33.0.6:4647"," 10.33.0.7:4647"]
 
 consul_servers: |
-    ["10.33.0.5"]
+    ["10.33.0.5", "10.33.0.6", "10.33.0.7"]
 
 
-consul_keygen: "l6R1ODtKvpfrUnczZs/T5Coyr6mFl5YTCStQHxU/T04="
+consul_keygen: "l6R1ODtKvpfrUnczZs/T5Coyr6mFl5YTCStQHxU/T04=" # consul keygen
