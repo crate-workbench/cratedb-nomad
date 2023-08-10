@@ -1,0 +1,25 @@
+---
+
+- name: netplan generate
+  command:
+    argv:
+      - /lib/netplan/generate
+
+- name: restart resolved
+  tags:
+  - service
+  service:
+    name: systemd-resolved
+    state: restarted
+
+- name: restart nomad
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: nomad
+    state: restarted
+
+- name: restart consul
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: consul
+    state: restarted

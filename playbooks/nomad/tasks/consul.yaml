@@ -1,0 +1,102 @@
+---
+
+- name: Create "consul" group
+  tags: consul
+  group:
+    name: consul
+
+- name: Create "consul" user
+  tags: consul
+  user:
+    name: consul
+    shell: /sbin/nologin
+    group: consul
+    groups: users
+    append: yes
+    password: "{{ consul_nomad_password }}"  # mkpasswd -m sha-512
+
+
+- name: Ensure consul directories
+  tags: consul
+  file:
+    path: "{{ item.dir }}"
+    owner: consul
+    group: consul
+    state: directory
+    mode: '0755'
+  loop:
+    - { dir: '/opt/consul' }
+    - { dir: '/etc/consul.d' }
+
+- name: Ensure consul key material
+  tags: consul
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: consul
+    group: consul
+    mode: 0644
+  loop:
+  # consul keygen --> store in group_vars/nomad.yaml
+  # consul tls ca create --> run in ./files directory
+  # consul tls cert create -server -dc dc1 -domain consul --> run in ./files directory
+  # yes! good you asked. You would want separate certs for each server and client
+  # for your production
+    - { src: 'consul-agent-ca-key.pem', dest: '/etc/consul.d/' }
+    - { src: 'consul-agent-ca.pem', dest: '/etc/consul.d/' }
+    - { src: 'dc1-server-consul-0.pem', dest: '/etc/consul.d/' }
+    - { src: 'dc1-server-consul-0-key.pem', dest: '/etc/consul.d/' }
+  notify: restart consul
+  ignore_errors: yes ### ATM I ignore this
+
+- name: Install consul 1.16.1
+  tags: consul
+  unarchive:
+    src: https://releases.hashicorp.com/consul/1.16.1/consul_1.16.1_linux_amd64.zip
+    dest: /usr/local/bin
+    remote_src: true
+    creates: /usr/local/bin/consul
+
+- name: Install unit file to systemd
+  tags: consul
+  ansible.builtin.copy:
+    src: consul.service
+    dest: /lib/systemd/system/consul.service
+    owner: nomad
+    group: nomad
+    mode: 0644
+
+- name: Template consul config file
+  tags: consul
+  template:
+    dest: /etc/consul.d/consul.hcl
+    src: consul.hcl.j2
+    owner: consul
+    group: consul
+    mode: 0644
+    lstrip_blocks: yes
+    trim_blocks: no
+  notify: restart consul
+  ignore_errors: yes ### ATM I ignore this
+
+- name: Ensure consul DNS resolves on the VMs
+  tags: resolved
+  blockinfile:
+    path: /etc/systemd/resolved.conf
+    marker: "#<-- {mark} ANSIBLE MANAGED BLOCK -->"
+    block: |
+      [Resolve]
+      DNS=127.0.0.1:8600
+      DNSSEC=false
+      Domains=~consul
+  notify: restart resolved
+
+- name: Configure systemd to use service
+  tags: consul
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    state: started
+    name: consul.service
+  notify: restart consul
+  ignore_errors: yes ### ATM I ignore this

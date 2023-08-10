@@ -1,0 +1,6 @@
+---
+- hosts: nomad
+  gather_facts: true
+
+  roles:
+    - nomad

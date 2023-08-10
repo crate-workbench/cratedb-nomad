@@ -27,7 +27,7 @@ job "coredns" {
         data = <<EOH
 .:53 {
     bind enp7s0
-    forward consul 10.33.0.2:8600
+    forward consul 10.x.x.2:8600
     forward . /etc/resolv.conf
     log
     errors
