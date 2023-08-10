@@ -41,7 +41,7 @@
     executable: /bin/bash
 
 - name: Ensure hashicorp apt repository for JAMMY !!!!
-  tags: nomad
+  tags: consul
   ansible.builtin.copy:
     src: hashicorp.list
     dest: /etc/apt/sources.list.d/
@@ -56,6 +56,7 @@
     name: consul
     state: latest
     update_cache: yes
+
 
 - name: Configure systemd to use service
   tags: consul
@@ -78,3 +79,15 @@
     trim_blocks: no
   notify: restart consul
   ignore_errors: yes ### ATM I ignore this
+
+- name: Ensure consul DNS resolves on volumes
+  tags: resolved
+  blockinfile:
+    path: /etc/systemd/resolved.conf
+    marker: "#<-- {mark} ANSIBLE MANAGED BLOCK -->"
+    block: |
+      [Resolve]
+      DNS=127.0.0.1:8600
+      DNSSEC=false
+      Domains=~consul
+  notify: restart resolved

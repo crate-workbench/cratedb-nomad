@@ -5,11 +5,12 @@
     argv:
       - /lib/netplan/generate
 
-- name: resolvectl reload
-  command:
-    argv:
-      - resolvectl
-      - reload
+- name: restart resolved
+  tags:
+  - service
+  service:
+    name: systemd-resolved
+    state: restarted
 
 - name: restart nomad
   ansible.builtin.systemd:
