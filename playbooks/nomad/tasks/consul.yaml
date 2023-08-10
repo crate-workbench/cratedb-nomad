@@ -20,8 +20,8 @@
   tags: consul
   file:
     path: "{{ item.dir }}"
-    #owner: consul
-    #group: consul
+    owner: consul
+    group: consul
     state: directory
     mode: '0755'
   loop:
@@ -33,8 +33,8 @@
   ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-   # owner: consul
-   # group: consul
+    owner: consul
+    group: consul
     mode: 0644
   loop:
   # consul keygen --> store in group_vars/nomad.yaml
@@ -62,27 +62,17 @@
   ansible.builtin.copy:
     src: consul.service
     dest: /lib/systemd/system/consul.service
-    #owner: nomad
-    #group: nomad
+    owner: nomad
+    group: nomad
     mode: 0644
-
-- name: Configure systemd to use service
-  tags: consul
-  systemd:
-    daemon_reload: yes
-    enabled: yes
-    state: started
-    name: consul.service
-  notify: restart consul
-  ignore_errors: yes ### ATM I ignore this
 
 - name: Template consul config file
   tags: consul
   template:
     dest: /etc/consul.d/consul.hcl
     src: consul.hcl.j2
-    #owner: consul
-    #group: consul
+    owner: consul
+    group: consul
     mode: 0644
     lstrip_blocks: yes
     trim_blocks: no
@@ -100,3 +90,13 @@
       DNSSEC=false
       Domains=~consul
   notify: restart resolved
+
+- name: Configure systemd to use service
+  tags: consul
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    state: started
+    name: consul.service
+  notify: restart consul
+  ignore_errors: yes ### ATM I ignore this

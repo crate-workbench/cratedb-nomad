@@ -10,7 +10,9 @@
     name: nomad
     shell: /sbin/nologin
     group: nomad
-    groups: users
+    groups:
+     - users
+     - docker
     append: yes
     password: "{{ consul_nomad_password }}"  # mkpasswd -m sha-512
 
@@ -60,16 +62,6 @@
     group: nomad
     mode: 0644
 
-- name: Configure systemd to use service
-  tags: nomad
-  systemd:
-    daemon_reload: yes
-    enabled: yes
-    state: started
-    name: nomad.service
-  notify: restart nomad
-  ignore_errors: yes ### ATM I ignore this
-
 - name: Install CNI Plugins
   tags: nomad
   unarchive:
@@ -88,5 +80,15 @@
     mode: '0644'
     lstrip_blocks: yes
     trim_blocks: no
+  notify: restart nomad
+  ignore_errors: yes ### ATM I ignore this
+
+- name: Configure systemd to use service
+  tags: nomad
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    state: started
+    name: nomad.service
   notify: restart nomad
   ignore_errors: yes ### ATM I ignore this
