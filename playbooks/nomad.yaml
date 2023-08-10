@@ -1,7 +1,6 @@
 ---
 - hosts: nomad
   gather_facts: true
-  vars:
-#    ansible_user: root  # Only 1st run creates user ADMIN!
+
   roles:
     - nomad

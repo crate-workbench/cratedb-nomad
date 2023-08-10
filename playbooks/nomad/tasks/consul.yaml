@@ -79,7 +79,7 @@
   notify: restart consul
   ignore_errors: yes ### ATM I ignore this
 
-- name: Ensure consul DNS resolves on volumes
+- name: Ensure consul DNS resolves on the VMs
   tags: resolved
   blockinfile:
     path: /etc/systemd/resolved.conf
