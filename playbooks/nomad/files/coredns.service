@@ -1,0 +1,20 @@
+[Unit]
+Description="corends"
+Requires=network-online.target
+After=network-online.target
+ConditionFileNotEmpty=/etc/coredns.d/coredns.conf
+
+[Service]
+Type=notify
+EnvironmentFile=-/etc/coredns.d/coredns.env
+User=root
+Group=root
+ExecStart=/usr/local/bin/coredns -conf /etc/coredns.d/coredns.conf
+ExecReload=/bin/kill --signal HUP $MAINPID
+KillMode=process
+KillSignal=SIGTERM
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

@@ -1,4 +1,4 @@
-Unit]
+[Unit]
 Description="HashiCorp Consul - A service mesh solution"
 Documentation=https://www.consul.io/
 Requires=network-online.target

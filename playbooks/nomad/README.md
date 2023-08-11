@@ -9,6 +9,7 @@ is configurable). Our favorite Hosting Provider is Hetzner. They have a CSI Plug
 works with nomad
 - add a private network to the machine
 - add the IP addresses to the ansible _inventory file_: inventory.ini
+- update the Firewall Rules - in case you protect your servers with that - I always forget that :-)
 - add the IP addresses to the ansible _group_vars/nomad.yaml_
 - download the consul binary to your local machine
 - run `consul keygen` and add it to _group_vars/nomad.yaml_
