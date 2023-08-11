@@ -7,7 +7,7 @@
       {% filter indent(width=4, first=true) %}
               nameservers:
                   addresses:
-                  - {{ coredns_ip }
+                  - {{ coredns_ip }}
       {% endfilter %}
 
 - name: Apply Netplan configuration
@@ -24,3 +24,8 @@
   tags: netplan
   debug:
     msg: "{{ resolvectl_status.stdout }}"
+
+- name: Head to nomad UI...
+  tags: ui
+  debug:
+    msg: "http://{{ ansible_host }}:4646/ui/jobs"

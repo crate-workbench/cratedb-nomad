@@ -1,0 +1,52 @@
+---
+
+- name: Ensure coredns directories
+  tags: coredns
+  file:
+    path: "{{ item.dir }}"
+    owner: root
+    group: root
+    state: directory
+    mode: '0755'
+  loop:
+    - { dir: '/etc/coredns.d' }
+
+- name: Install corends
+  tags: coredns
+  unarchive:
+    src: https://github.com/coredns/coredns/releases/download/v1.10.1/coredns_1.10.1_linux_amd64.tgz
+    dest: /usr/local/bin
+    remote_src: true
+    creates: /usr/local/bin/coredns
+
+- name: Template coredns config file
+  tags: coredns
+  template:
+    dest: /etc/coredns.d/coredns.conf
+    src: coredns.conf.j2
+    owner: root
+    group: root
+    mode: '0644'
+    lstrip_blocks: yes
+    trim_blocks: no
+  notify: restart coredns
+  ignore_errors: yes ### ATM I ignore this
+
+- name: Install unit file to systemd
+  tags: coredns
+  ansible.builtin.copy:
+    src: coredns.service
+    dest: /etc/systemd/system/coredns.service #? /lib/systemd/system
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure systemd to use service
+  tags: coredns
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    state: started
+    name: coredns.service
+  notify: restart coredns
+  ignore_errors: yes ### ATM I ignor

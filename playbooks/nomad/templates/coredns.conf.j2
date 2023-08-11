@@ -1,0 +1,7 @@
+.:53 {
+    bind {{ coredns_bind_device }}
+    forward consul {{ consul_nameserver_ip }}:8600
+    forward . /etc/resolv.conf
+    log
+    errors
+}

@@ -23,3 +23,9 @@
     daemon_reload: yes
     name: consul
     state: restarted
+
+- name: restart coredns
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: coredns
+    state: restarted
