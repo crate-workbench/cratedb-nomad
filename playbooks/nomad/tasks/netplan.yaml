@@ -1,0 +1,31 @@
+- name: Add nameserver to cloud-init
+  tags: netplan
+  blockinfile:
+    path: /etc/netplan/50-cloud-init.yaml
+    insertafter: "macaddress:"
+    block: |
+      {% filter indent(width=4, first=true) %}
+              nameservers:
+                  addresses:
+                  - {{ coredns_ip }}
+      {% endfilter %}
+
+- name: Apply Netplan configuration
+  tags: netplan
+  command: netplan apply
+
+- name: check resolvectl status
+  tags: netplan
+  shell:
+    cmd: resolvectl status | grep -i eth0 -A4
+  register: resolvectl_status
+
+- name: Show script output
+  tags: netplan
+  debug:
+    msg: "{{ resolvectl_status.stdout }}"
+
+- name: Head to nomad UI...
+  tags: ui
+  debug:
+    msg: "http://{{ ansible_host }}:4646/ui/jobs"
