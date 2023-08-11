@@ -3,4 +3,3 @@
 - import_tasks: nomad.yaml
 - import_tasks: consul.yaml
 - import_tasks: netplan.yaml
-  when: netplan is defined

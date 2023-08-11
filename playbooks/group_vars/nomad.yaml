@@ -6,5 +6,6 @@ nomad_servers: |
 consul_servers: |
     ["10.33.0.5", "10.33.0.6", "10.33.0.7"]
 
+coredns_ip: 10.33.0.5
 
 consul_keygen: "l6R1ODtKvpfrUnczZs/T5Coyr6mFl5YTCStQHxU/T04=" # consul keygen
