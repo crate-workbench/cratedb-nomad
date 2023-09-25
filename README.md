@@ -9,11 +9,29 @@ This document outlines how to get started running CrateDB on HashiCorp Nomad.
 [HashiCorp Waypoint] is a frontend to build and deploy cluster resources to
 different targets, using a similar command-line interface like Docker Compose.
 
-
 ## Setup
 
 Install and start Waypoint using the Docker backend, open the Waypoint UI,
 acquire the project repository, and initialize the Waypoint project.
+
+### Ansible (automate the heavy lifting)
+We created a Ansible Playbook to setup a 3-node Nomad/Consul cluster. If you
+are here for that. Just follow [along](playbooks/nomad/README.md). After all we
+figured that there are quite some steps involved in making cratedb containers run
+in nomad - as a multi-node cluster.
+
+#### DNS
+The cratedb service discovery relies on `SRV` DNS queries to successfully discover
+the other nodes in the cluster. Gladly Consul talks DNS on port 8600. You _just_ have to
+customize the `"-Cdiscovery.srv.query=` and you are good. But wait there are some more
+obstacles until that works:
+- Due to how docker (bridged mode) works we need to be able to send queries to either consul
+or to the _regular_ resolver on the host - as the container inherits this DNS setup. We choose to solve this with `coredns` and updating the `systemd/resolved` config.
+- As the VMs we are running are configured by cloud-init and get their IP configuration via
+DHCP, we also need to touch cloud-init to point to DNS on our host to coredns.
+
+Hopefully this does not sound too complicated, either you set it up manually or you rely
+on our ansible setup - or at least you can copy it from there.
 
 
 ### Install Waypoint
