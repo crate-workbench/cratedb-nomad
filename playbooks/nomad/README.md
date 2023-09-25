@@ -1,5 +1,8 @@
 # Ansible Playbook to bootstrap nomad/consul
 
+![Alt text](./img/nomad2.drawio.svg)
+<img src="./img/nomad2.drawio.svg">
+
 The `nomad.yaml` notebook bootstraps nomad and consul. You need to follow this steps **prior**
 to run it:
 
